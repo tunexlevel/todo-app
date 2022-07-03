@@ -26,7 +26,7 @@ export default function SearchBar({handleSearch}) {
             <OutlinedInput fullWidth
                 id="outlined-adornment-weight"
                 onChange={handleSearch}
-                placeholder="Search from your list with ease..."
+                placeholder="Search from your list with ease...**"
                 endAdornment={<InputAdornment position="end"><Search /></InputAdornment>}
                 aria-describedby="outlined-weight-helper-text"
             />

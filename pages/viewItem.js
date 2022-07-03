@@ -1,4 +1,4 @@
-import ViewItem from '../components/ViewItem/ViewItem'
+import ViewItem from '../src/components/ViewItem/ViewItem'
 
 const viewItem = () => {
   return (

@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
-import ViewItem from '../../components/ViewItem/ViewItem'
+import ViewItem from '../../src/components/ViewItem/ViewItem'
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import Link from 'next/link';
 import { ArrowBack } from '@mui/icons-material';

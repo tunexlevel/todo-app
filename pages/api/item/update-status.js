@@ -1,4 +1,4 @@
-import { ItemModel } from "../../../components/Item/ItemModel"
+import { ItemModel } from "../../../src/components/Item/ItemModel"
 
 
 

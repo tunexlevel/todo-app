@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import HomeView from '../components/Home/HomeView';
+import HomeView from '../src/components/Home/HomeView';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 

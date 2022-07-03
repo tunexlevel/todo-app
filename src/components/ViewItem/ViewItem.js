@@ -87,7 +87,7 @@ const ViewItem = ({ item }) => {
     const handleTasks = () => {
 
         if (task) {
-            tasks.push(task)
+            tasks.push({id: tasks.length+1,  title: task, status: 0})
             setTasks(tasks)
             setTask("");
         }

@@ -1,4 +1,4 @@
-import { ItemModel } from "../../../components/Item/ItemModel"
+import { ItemModel } from "../../../src/components/Item/ItemModel"
 
 
 export default function handler(req, res) {
@@ -20,6 +20,7 @@ export default function handler(req, res) {
     }
 
     const getTask = ItemModel.getByTaskId(task.id, getItem[0].tasks)
+    console.log(getTask)
     if(!getTask.length){
         return res.status(200).json({message: 'Task  not found', status:"error"})
     }

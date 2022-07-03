@@ -1,4 +1,4 @@
-import NewItem from "../components/NewItem/NewItem"
+import NewItem from "../src/components/NewItem/NewItem"
 
 const newItem = () => {
   return (
