@@ -100,12 +100,19 @@ function deleteTask(id, item) {
 
 function updateTaskStatus(task, item) {
     // filter out deleted item and save
+    const getTask = ItemModel.getByTaskId(task.id, item.tasks)
+
     items = items.map(x => {
         if (x.id.toString() === item.id.toString()) {
             x.updated_at = new Date().toISOString();
             let statusCount = 0;
+            //check if the task is a new task
+            if(!getTask.length){
+                x.tasks.push(task) //add the new task
+            }
             x.tasks = x.tasks.map(i => {
-                if (i.id.toString() === task.id.toString()) {
+                //update for only existing task
+                if (getTask.length && i.id.toString() === task.id.toString()) {
                     i.status = task.status;
                 }
 

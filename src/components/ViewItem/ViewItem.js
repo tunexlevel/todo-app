@@ -55,13 +55,13 @@ const ViewItem = ({ item }) => {
 
     };
 
-    const handleToggle = (id) => async () => {
-        const currentIndex = checked.indexOf(id);
+    const handleToggle = (task) => async () => {
+        const currentIndex = checked.indexOf(task.id);
         const newChecked = [...checked];
         let taskStatus = 0;
         if (currentIndex === -1) {
             taskStatus = 1;
-            newChecked.push(id);
+            newChecked.push(task.id);
 
         } else {
             newChecked.splice(currentIndex, 1);
@@ -69,7 +69,8 @@ const ViewItem = ({ item }) => {
 
         try {
             setChecked(newChecked);
-            const result = await axios.post(process.env.NEXT_PUBLIC_API + `/task/update-status`, { id, status: taskStatus, itemId: item.id })
+            task.status = taskStatus;
+            const result = await axios.post(process.env.NEXT_PUBLIC_API + `/task/update-status`, { task, itemId: item.id })
             setStatus(!result.data.item.status ? false : true)
             setStatusMessage(!result.data.item.status ? "Unfinished" : "Done")
         }

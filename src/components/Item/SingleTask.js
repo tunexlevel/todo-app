@@ -31,7 +31,7 @@ export default function SingleTask({ item: value, checkbox, deleteBtn, handleDel
       >
         {
           checkbox ?
-            <ListItemButton role={undefined} onClick={handleToggle(value.id)} dense>
+            <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
 
               <ListItemIcon>
                 <Checkbox
