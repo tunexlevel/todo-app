@@ -1,4 +1,4 @@
-import { ItemModel } from "../../../src/Item/ItemModel"
+import { ItemModel } from "../../../components/Item/ItemModel"
 
 
 export default function handler(req, res) {
