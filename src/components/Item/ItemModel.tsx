@@ -31,7 +31,7 @@ function find(x: string, limit: number): { items: Item[], total: number } {
 
 function getByTaskId(id: number, task: Task[]): Task[] {
 
-    return task.filter(x => x.id.toString() === id.toString())
+    return task.filter(x => x.id  === id )
 }
 
 function getById(id: number): Item[] {

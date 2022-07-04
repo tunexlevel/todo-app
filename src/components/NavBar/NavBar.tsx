@@ -5,32 +5,45 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import Link from 'next/link';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { colors } from '@mui/material';
+
+const theme = createTheme({
+    palette: {
+        mode: 'light',
+        primary: {
+            main: "#2e7d32",
+        },
+    },
+});
+
 
 export default function ButtonAppBar() {
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" color="success" >
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+            <ThemeProvider theme={theme}>
+                <AppBar position="static">
+                    <Toolbar>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{ mr: 2 }}
+                        >
+                            <PlaylistAddCheckIcon />
+                        </IconButton>
 
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        <Link href='/'>TODO APP</Link>
-                    </Typography>
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                            <Link href='/'>TODO APP</Link>
+                        </Typography>
 
-                    <Button variant="inherit"><Link href='/newItem'>ADD NEW ITEM</Link></Button>
-                    {/* <Button variant="inherit" href="/newItem">Add new item</Button> */}
-                </Toolbar>
-            </AppBar>
+                        <Button color="inherit"><Link href='/newItem'>ADD NEW ITEM</Link></Button>
+                    </Toolbar>
+                </AppBar>
+            </ThemeProvider>
         </Box>
     );
 }

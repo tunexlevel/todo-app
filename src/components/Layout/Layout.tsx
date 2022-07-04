@@ -1,10 +1,11 @@
 import { Box, Container } from "@mui/material"
 import NavBar from "../NavBar/NavBar"
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { ReactNode } from "react";
 
 
 
-const Layout = ({ children }) => {
+const Layout = ({ children }: {children: ReactNode}) => {
     
     // const [xsmall, small, small2, medium, large] = useMediaQuery([
     //     "(max-width: 599px)",
