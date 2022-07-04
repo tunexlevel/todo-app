@@ -6,7 +6,9 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import ItemList from "../Item/ItemList"
-import { FormControlLabel, Grid, Typography } from '@mui/material';
+import { Alert, Collapse, FormControlLabel, IconButton, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
 import Link from 'next/link';
 import { ArrowBack } from '@mui/icons-material';
 import TaskList from '../Item/TaskList';
@@ -17,14 +19,17 @@ import { Item, Task } from '../../models/interface';
 
 
 
-const ViewItem = ({ item }: {item: Item}) => {
+const ViewItem = ({ item }: { item: Item }) => {
     const [value, setValue] = useState(item.due_date);
     const [title, setTitle] = useState(item.title || "");
     const [moreTask, setMoreTask] = useState(false);
     const [tasks, setTasks] = useState(item.tasks || []);
     const [task, setTask] = useState("");
     const [status, setStatus] = useState(!item.status ? false : true);
+    const [messageAlert, setMessageAlert] = useState({ status: false, message: null });
     const [statusMessage, setStatusMessage] = useState(!item.status ? "Unfinished" : "Done");
+    const [open, setOpen] = useState(true);
+
 
     const checkedTasks = (tasks: Task[]): number[] => {
         if (tasks.length > 0) {
@@ -89,7 +94,7 @@ const ViewItem = ({ item }: {item: Item}) => {
     const handleTasks = () => {
 
         if (task) {
-            tasks.push({id: tasks.length+1,  title: task, status: 0})
+            tasks.push({ id: tasks.length + 1, title: task, status: 0 })
             setTasks(tasks)
             setTask("");
         }
@@ -115,18 +120,37 @@ const ViewItem = ({ item }: {item: Item}) => {
             tasks: tasks,
             id: item.id
         }
-        const result = await axios.post(process.env.NEXT_PUBLIC_API +`/item/update`, newTasks);
-        alert(result.data.message)
-
+        const result = await axios.post(process.env.NEXT_PUBLIC_API + `/item/update`, newTasks);
+        setMessageAlert({ status: true, message: result.data.message })
+        setOpen(true)
     }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <BreadCrumb page={"VIEW ITEM"} />
+
+            {messageAlert.status &&
+                <Collapse in={open}>
+                    <Alert action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                                setOpen(false);
+                            }}
+                        >
+                            <CloseIcon fontSize="inherit" />
+                        </IconButton>
+                    }
+                        sx={{ mb: 2 }} severity="info">{messageAlert.message}</Alert>
+                </Collapse>
+            }
+
             <Box sx={{ paddingY: 5 }}>
                 <Box sx={{ display: "flex", paddingBottom: 2, gap: 5 }}>
                     <TextField onChange={handleTitle} value={title} id="outlined-basic" sx={{ width: "70%" }} label="Title" variant="outlined" />
-                    <DateTimePicker 
+                    <DateTimePicker
                         label="Due Date"
                         value={value}
                         onChange={handleChange}
@@ -147,7 +171,9 @@ const ViewItem = ({ item }: {item: Item}) => {
 
             </Box>
 
-            <TaskList handleToggle={handleToggle} checked={checked} tasks={tasks} handleDelete={handleDelete}  />
+
+
+            <TaskList handleToggle={handleToggle} checked={checked} tasks={tasks} handleDelete={handleDelete} />
 
             <Box sx={{ display: (moreTask ? "flex" : "none"), paddingBottom: 2, gap: 5 }}>
                 <TextField id="outlined-basic" value={task} name="task" onChange={handleTask} sx={{ width: "80%" }} label="Task " variant="outlined" />

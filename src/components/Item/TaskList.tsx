@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 
 import { Task } from '../../models/interface';
-import { Paper } from '@mui/material';
+import { Alert, Paper } from '@mui/material';
 
 
 export interface TaskListType {
@@ -38,7 +38,7 @@ export default function TaskList({tasks, handleDelete, handleToggle, checked }: 
                         );
                     })
                 }
-                { !tasks.length && <Box><Paper>No task added yet...</Paper></Box> }
+                { !tasks.length && <Alert severity="info">No task added yet!</Alert>}
             </List>
         </Box>
     );

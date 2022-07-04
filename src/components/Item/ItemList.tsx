@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 import SingleItem from './SingleItem';
-import { Grid, Typography } from '@mui/material';
+import { Alert, Grid, Typography } from '@mui/material';
 import SingleTask from './SingleTask';
 
 import { Item } from '../../models/interface';
@@ -44,7 +44,8 @@ export default function ItemList({ items, searching, handleDelete, total, checke
       </Box>
 
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {!items.length ? (searching ? <Box>No result found!</Box> : <Box>No item added yet..!</Box>)
+        {!items.length ? (
+          searching ? <Alert severity="info">No result found!</Alert> : <Alert severity="info">No item added yet..!</Alert>)
           :
           items.map((value, index) => {
             const labelId = `checkbox-list-label-${value}`;
@@ -53,7 +54,7 @@ export default function ItemList({ items, searching, handleDelete, total, checke
                 handleToggle={handleToggle}
                 checked={checked}
                 handleDelete={handleDelete}
-                item={value} 
+                item={value}
                 key={index} />
             );
           })
