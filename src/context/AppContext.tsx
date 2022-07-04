@@ -11,12 +11,16 @@ export interface AlertType {
 export interface AppContextType {
     messageAlert: AlertType,
     setMessageAlert: Dispatch<SetStateAction<AlertType>>
+    open: boolean, 
+    setOpen: Dispatch<SetStateAction<boolean>>
 }
 
 
 let defaultState = {
     messageAlert: { status: false, message: "" },
     setMessageAlert: (): AlertType => ({ status: false, message: "" }),
+    open: false, 
+    setOpen: (): boolean => false,
 }
 
 
@@ -26,11 +30,13 @@ const AppContext = createContext<AppContextType>(defaultState);
 export function AppWrapper({ children }: { children: ReactNode }) {
 
     const [messageAlert, setMessageAlert] = useState({ status: false, message: "" });
-
+    const [open, setOpen] = useState(true);
     
     const sharedState = {
         messageAlert,
-        setMessageAlert
+        setMessageAlert,
+        open, 
+        setOpen
     }
 
     return (

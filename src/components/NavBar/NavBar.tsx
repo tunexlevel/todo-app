@@ -41,6 +41,7 @@ export default function ButtonAppBar() {
                         </Typography>
 
                         <Button color="inherit"><Link href='/newItem'>ADD NEW ITEM</Link></Button>
+                        <Button color="inherit"><Link href='/login'>LOGIN</Link></Button>
                     </Toolbar>
                 </AppBar>
             </ThemeProvider>

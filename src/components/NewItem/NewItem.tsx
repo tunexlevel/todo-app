@@ -19,7 +19,7 @@ import { useAppContext } from '../../context/AppContext';
 const NewItem = () => {
     const router = useRouter()
 
-    const { setMessageAlert } = useAppContext()
+    const { setMessageAlert, setOpen } = useAppContext()
 
     const [value, setValue] = useState<string | null>(null);
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -61,6 +61,7 @@ const NewItem = () => {
         try {
             const result = await axios.post(API + `/item/create`, newData)
             setMessageAlert({ status: true, message: result.data.message });
+            setOpen(true);
             setTasks([])
             setValue(null)
             setTask("")

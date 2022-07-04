@@ -23,7 +23,7 @@ import AlertMessage from '../AlertMessage/AlertMessage';
 
 const ViewItem = ({ item }: { item: Item }) => {
 
-    const {messageAlert, setMessageAlert} = useAppContext();
+    const {messageAlert, setMessageAlert, open, setOpen} = useAppContext();
 
     const [value, setValue] = useState(item.due_date);
     const [title, setTitle] = useState(item.title || "");
@@ -32,7 +32,6 @@ const ViewItem = ({ item }: { item: Item }) => {
     const [task, setTask] = useState("");
     const [status, setStatus] = useState(!item.status ? false : true);
     const [statusMessage, setStatusMessage] = useState(!item.status ? "Unfinished" : "Done");
-    const [open, setOpen] = useState(true);
 
 
     useEffect(() => {

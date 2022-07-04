@@ -12,6 +12,7 @@ import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
 import Link from 'next/link';
 import { Item } from '../../models/interface';
+import moment from 'moment';
 
 
 export interface SingleItemType {
@@ -61,7 +62,7 @@ export default function SingleItem({ item, handleDelete, checked, handleToggle }
               secondary={
                 <Typography sx={{ opacity: 0.5 }} 
                   component="h1" 
-                  variant="caption">{item.created_at.toString()}</Typography>
+                  variant="caption">{moment(item.created_at).format('DD-MM-YY HH:mm')}</Typography>
               } 
             />
         </ListItemButton>
