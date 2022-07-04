@@ -8,7 +8,22 @@ import SingleItem from './SingleItem';
 import { Grid, Typography } from '@mui/material';
 import SingleTask from './SingleTask';
 
-export default function ItemList({ items, searching, handleDelete, total, checked, handleToggle: handleToggle }) {
+import { Item } from '../../models/interface';
+
+
+export interface ItemListType {
+  items: Item[],
+  searching: boolean,
+  checkbox: boolean,
+  total: number,
+  handleDelete: (id: number) => void,
+  handleToggle: (id: number) => void,
+  checked: number[]
+}
+
+
+
+export default function ItemList({ items, searching, handleDelete, total, checked, handleToggle: handleToggle }: ItemListType) {
 
 
   return (
@@ -20,33 +35,26 @@ export default function ItemList({ items, searching, handleDelete, total, checke
               Recent List
             </Typography>
           </Grid>
-          <Grid item xs={4}  textAlign="right">
+          <Grid item xs={4} textAlign="right">
             <Typography component="h1" variant="caption">
-              <Chip avatar={<Avatar>{total}</Avatar>} color="success"  label={`Total Items`} />
+              <Chip avatar={<Avatar>{total}</Avatar>} color="success" label={`Total Items`} />
             </Typography>
           </Grid>
         </Grid>
       </Box>
 
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {!items.length ? (searching == 1 ?
-          <SingleTask 
-            handleToggle={handleToggle} 
-            deleteBtn={true} 
-            checked={[-1]}
-            item={"No result found!"} /> : 
-          <SingleTask 
-            handleToggle={handleToggle}
-            checked={[-1]}
-            deleteBtn={true} item={"No item added yet..."} />) :
+        {!items.length ? (searching ? <Box>No result found!</Box> : <Box>No item added yet..!</Box>)
+          :
           items.map((value, index) => {
             const labelId = `checkbox-list-label-${value}`;
             return (
-              <SingleItem 
-                handleToggle={handleToggle} 
-                checked={checked} 
-                handleDelete={handleDelete} 
-                item={value} key={index} />
+              <SingleItem
+                handleToggle={handleToggle}
+                checked={checked}
+                handleDelete={handleDelete}
+                item={value} 
+                key={index} />
             );
           })
         }

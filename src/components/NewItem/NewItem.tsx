@@ -11,21 +11,20 @@ import TaskList from '../Item/TaskList';
 import axios from 'axios';
 import { Typography } from '@mui/material';
 import { useRouter } from 'next/router';
+import { Task } from '../../models/interface';
 
 
 const NewItem = () => {
     const router = useRouter()
 
-    const [value, setValue] = useState(null);
-    const [tasks, setTasks] = useState([]);
+    const [value, setValue] = useState<string|null>(null);
+    const [tasks, setTasks] = useState<Task[]>([]);
     const [task, setTask] = useState("");
     const [title, setTitle] = useState("");
-    const [allow, setAllow] = useState(false);
+    const [allow, setAllow] = useState(false); //for enabling the save button
 
     const API = process.env.NEXT_PUBLIC_API;
 
-
-    const { register, handleSubmit, reset, formState } = useForm();
 
     const handleAllow = () =>{
         if(title && tasks.length > 0){
@@ -54,40 +53,40 @@ const NewItem = () => {
             router.push("/")
         }
         catch(e){
-            alert(e.message || "Internal system error");
+            //alert(e.message || "Internal system error");
         }
         
     }
 
-    const handleTitle = (event) => {
+    const handleTitle = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setTitle(event.target.value);
         handleAllow();
     };
 
-    const handleChange = (newValue) => {
+    const handleChange = (newValue: string | null) => {
         setValue(newValue);
     };
 
-    const handleTask = (event) => {
+    const handleTask = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setTask(event.target.value);
     };
 
     const handleTasks = () => {
-
         if (task) {
-            tasks.push(task)
+            const nTask = {status:0, id:0, title:""};
+            nTask.id = tasks.length ? Math.max(...tasks.map(x => x.id)) + 1 : 1;
+            nTask.title = task;
+            
+            tasks.push(nTask)
             setTasks(tasks)
             setTask("");
         }
     };
 
-    const handleDelete = (id) => {
-        const newTasks = tasks.filter((val, index) => index != id)
+    const handleDelete = (id: number): void => {
+        const newTasks = tasks.filter((task: Task) => task.id != id)
         setTasks(newTasks)
     }
-
-    const handleToggle = ()=>{return null}
-
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -97,9 +96,9 @@ const NewItem = () => {
                     <Box sx={{ display: "flex", paddingY: 5, gap: 5 }}>
                          
                         <TextField name="title" value={title}  onChange={handleTitle}  id="outlined-basic" sx={{ width: "70%" }} label="Title" variant="outlined" />
-                        <DateTimePicker sx={{ width: "30%" }}
+                        <DateTimePicker 
+                            // sx={{ width: "30%" }}
                             label="Due Date"
-                            name="due_date"
                             value={value}
                             onChange={handleChange}
                             renderInput={(params) => <TextField sx={{ opacity: 0.7 }} {...params} />}
@@ -110,10 +109,9 @@ const NewItem = () => {
                         <Button variant="outlined" onClick={handleTasks} sx={{ width: "20%" }} >ADD</Button>
                     </Box>
                 </Box>
-                <TaskList checkbox={false} tasks={tasks} handleDelete={handleDelete} handleToggle={handleToggle} />
+                <TaskList  tasks={tasks} handleDelete={handleDelete}  />
                 <Box sx={{ paddingY: 10 }}>
                     <Button onClick={handleSaveItem} variant="outlined" disabled={!allow} >
-                        {formState.isSubmitting && "Loading..."}
                         SAVE
                     </Button>
                 </Box>

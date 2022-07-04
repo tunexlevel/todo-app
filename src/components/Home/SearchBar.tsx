@@ -11,22 +11,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 
-export default function SearchBar({handleSearch}) {
+export default function SearchBar({handleSearch}:{handleSearch:(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>void}) {
     return (
-        // <Box sx={{ paddingY: 10 }} >
-        //     <TextField 
-        //     fullWidth 
-        //     id="outlined-basic"  
-        //     label="Search from your list" 
-        //     variant="outlined"
-        //     endAdornment={<InputAdornment position="end">IK</InputAdornment>}
-        //     />
-        // </Box>
         <Box sx={{ paddingY: 10 }} >
             <OutlinedInput fullWidth
                 id="outlined-adornment-weight"
                 onChange={handleSearch}
-                placeholder="Search from your list with ease...**"
+                placeholder="Search from your list with ease &#x1F603;"
                 endAdornment={<InputAdornment position="end"><Search /></InputAdornment>}
                 aria-describedby="outlined-weight-helper-text"
             />

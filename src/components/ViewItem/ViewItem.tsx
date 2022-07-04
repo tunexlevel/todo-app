@@ -13,10 +13,11 @@ import TaskList from '../Item/TaskList';
 import BreadCrumb from '../Layout/BreadCrumb';
 import Switch from '@mui/material/Switch';
 import axios from 'axios';
+import { Item, Task } from '../../models/interface';
 
 
 
-const ViewItem = ({ item }) => {
+const ViewItem = ({ item }: {item: Item}) => {
     const [value, setValue] = useState(item.due_date);
     const [title, setTitle] = useState(item.title || "");
     const [moreTask, setMoreTask] = useState(false);
@@ -25,18 +26,18 @@ const ViewItem = ({ item }) => {
     const [status, setStatus] = useState(!item.status ? false : true);
     const [statusMessage, setStatusMessage] = useState(!item.status ? "Unfinished" : "Done");
 
-    const checkedItems = (lists) => {
-        if (lists.length > 0) {
+    const checkedTasks = (tasks: Task[]): number[] => {
+        if (tasks.length > 0) {
             //check for the task completed
-            const nList = lists.filter(x => parseInt(x.status) === 1)
+            const nList = tasks.filter(x => x.status === 1)
 
             //return the ids of the tasks
-            return [...nList.map(x => parseInt(x.id))]
+            return [...nList.map(x => x.id)]
         }
         return [0]
     }
 
-    const [checked, setChecked] = useState(checkedItems(tasks)); //list of the current item ids
+    const [checked, setChecked] = useState(checkedTasks(tasks)); //list of the current item ids
 
 
     const handleStatus = async () => {
@@ -46,16 +47,16 @@ const ViewItem = ({ item }) => {
             setStatus(x);
             setStatusMessage(status ? "Unfinished" : "Done")
             const result = await axios.post(process.env.NEXT_PUBLIC_API + `/item/update-status`, { id: item.id, status: newStatus })
-            setChecked(checkedItems(result.data.item.tasks))
+            setChecked(checkedTasks(result.data.item.tasks))
         }
         catch (e) {
-            alert(e.message || "Internal system error");
+            //alert(e.message || "Internal system error");
         }
 
 
     };
 
-    const handleToggle = (task) => async () => {
+    const handleToggle = async (task: Task) => {
         const currentIndex = checked.indexOf(task.id);
         const newChecked = [...checked];
         let taskStatus = 0;
@@ -75,13 +76,13 @@ const ViewItem = ({ item }) => {
             setStatusMessage(!result.data.item.status ? "Unfinished" : "Done")
         }
         catch (e) {
-            alert(e.message || "Internal system error");
+            //alert(e.message || "Internal system error");
         }
 
 
     };
 
-    const handleTask = (event) => {
+    const handleTask = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setTask(event.target.value);
     };
 
@@ -94,16 +95,16 @@ const ViewItem = ({ item }) => {
         }
     };
 
-    const handleChange = (newValue) => {
+    const handleChange = (newValue: string | null) => {
         setValue(newValue);
     };
 
-    const handleTitle = (event) => {
+    const handleTitle = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setTitle(event.target.value);
     };
 
-    const handleDelete = (id) => {
-        const newTasks = tasks.filter((val, index) => index != id)
+    const handleDelete = (id: number) => {
+        const newTasks = tasks.filter((task: Task) => task.id !== id)
         setTasks(newTasks)
     }
 
@@ -125,7 +126,7 @@ const ViewItem = ({ item }) => {
             <Box sx={{ paddingY: 5 }}>
                 <Box sx={{ display: "flex", paddingBottom: 2, gap: 5 }}>
                     <TextField onChange={handleTitle} value={title} id="outlined-basic" sx={{ width: "70%" }} label="Title" variant="outlined" />
-                    <DateTimePicker sx={{ width: "30%" }}
+                    <DateTimePicker 
                         label="Due Date"
                         value={value}
                         onChange={handleChange}
@@ -146,7 +147,7 @@ const ViewItem = ({ item }) => {
 
             </Box>
 
-            <TaskList handleToggle={handleToggle} checked={checked} tasks={tasks} handleDelete={handleDelete} checkbox={true} />
+            <TaskList handleToggle={handleToggle} checked={checked} tasks={tasks} handleDelete={handleDelete}  />
 
             <Box sx={{ display: (moreTask ? "flex" : "none"), paddingBottom: 2, gap: 5 }}>
                 <TextField id="outlined-basic" value={task} name="task" onChange={handleTask} sx={{ width: "80%" }} label="Task " variant="outlined" />

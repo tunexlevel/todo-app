@@ -2,26 +2,14 @@ import fs from "fs";
 
 // data in JSON file for todo list
 import items from "../../../storage/data.json";
+import { Item, Task } from "../../models/interface";
 
 export const ItemModel = {
     getAll: () => items,
-    getAllWithLimit: limit => {
-        const nItems = items.sort((x, y) => y.id - x.id)
-        return { items: nItems.slice(0, limit), total: items.length }
-    },
-    getById: id => items.filter(x => x.id.toString() === id.toString()),
-    getByTaskId: (id, item) => item.filter(x => x.id.toString() === id.toString()),
-
-    find: (x, limit) => {
-        const searchResult = items.filter(item => {
-            //use regular expression to filter the item by title
-            const re = new RegExp(`\\b${x}\\b`, 'gi');
-            return re.test(item.title);
-        })
-
-        const nItems = searchResult.sort((x, y) => y.id - x.id)
-        return { items: nItems.slice(0, limit), total: items.length }
-    },
+    getAllWithLimit,
+    getById,
+    getByTaskId,
+    find,
     create,
     update,
     updateStatus,
@@ -30,24 +18,45 @@ export const ItemModel = {
     updateTaskStatus
 };
 
-function create(item) {
+function find(x: string, limit: number): { items: Item[], total: number } {
+    const searchResult = items.filter(item => {
+        //use regular expression to filter the item by title
+        const re = new RegExp(`\\b${x}\\b`, 'gi');
+        return re.test(item.title);
+    })
+
+    const nItems = searchResult.sort((x, y) => y.id - x.id)
+    return { items: nItems.slice(0, limit), total: items.length }
+}
+
+function getByTaskId(id: number, task: Task[]): Task[] {
+
+    return task.filter(x => x.id.toString() === id.toString())
+}
+
+function getById(id: number): Item[] {
+    return items.filter(x => x.id === id)
+}
+
+function getAllWithLimit(limit: number): { items: Item[], total: number } {
+    const nItems = items.sort((x, y) => y.id - x.id)
+    return { items: nItems.slice(0, limit), total: items.length }
+}
+
+function create(item: Item) {
     //generate new item id
     item.id = items.length ? Math.max(...items.map(x => x.id)) + 1 : 1;
-
 
     item.status = 0; //unfinished task
     item.created_at = new Date().toISOString();
     item.updated_at = new Date().toISOString();
-    item.tasks = item.tasks.map((task, index) => {
-        return { id: index+1, title: task, status:0 }
-    })
-
+    item.tasks = item.tasks;
     // add and save item
     items.push(item);
-    return saveData();
+    saveData();
 }
 
-function update(param) {
+function update(param: Item) {
 
     items.map(x => {
         if (x.id.toString() === param.id.toString()) {
@@ -61,15 +70,15 @@ function update(param) {
     saveData();
 }
 
-function updateStatus(param) {
+function updateStatus(param: Item) {
 
-    items = items.map(x => {
+    items.map(x => {
         if (x.id.toString() === param.id.toString()) {
             x.status = param.status;
             x.updated_at = new Date().toISOString();
-            if(parseInt(param.status) === 1){
-                x.tasks = x.tasks.map(i=>{
-                    return {...i, status:1}
+            if (param.status === 1) {
+                x.tasks = x.tasks.map(i => {
+                    return { ...i, status: 1 }
                 })
             }
         }
@@ -77,37 +86,34 @@ function updateStatus(param) {
     });
 
     saveData();
-    
 }
 
 // prefixed with underscore '_' because 'delete' is a reserved word in javascript
-function _delete(id) {
+function _delete(id: number) {
     // filter out deleted item and save
-    items = items.filter(x => x.id.toString() !== id.toString());
-    saveData();
+    items.filter(x => x.id.toString() !== id.toString());
 
+    saveData();
 }
 
 
-function deleteTask(id, item) {
+function deleteTask(id: number, item: Item) {
     // filter out deleted item and save
-    const newTasks = item.filter(x => x.id.toString() !== id.toString())
-    items[item.id] = newTasks;
+    item.tasks.filter(x => x.id.toString() !== id.toString())
 
     saveData();
-
 }
 
-function updateTaskStatus(task, item) {
+function updateTaskStatus(task: Task, item: Item) {
     // filter out deleted item and save
     const getTask = ItemModel.getByTaskId(task.id, item.tasks)
 
-    items = items.map(x => {
+    items.map(x => {
         if (x.id.toString() === item.id.toString()) {
             x.updated_at = new Date().toISOString();
             let statusCount = 0;
             //check if the task is a new task
-            if(!getTask.length){
+            if (!getTask.length) {
                 x.tasks.push(task) //add the new task
             }
             x.tasks = x.tasks.map(i => {
@@ -116,13 +122,13 @@ function updateTaskStatus(task, item) {
                     i.status = task.status;
                 }
 
-                if(parseInt(i.status) > 0){
+                if (i.status > 0) {
                     statusCount++;
                 }
                 return i
             })
-             
-            x.status = statusCount === x.tasks.length ? 1:0
+
+            x.status = statusCount === x.tasks.length ? 1 : 0
 
         }
         return x;
@@ -136,11 +142,11 @@ function updateTaskStatus(task, item) {
 
 function saveData() {
     try {
-        fs.writeFileSync('./storage/data.json', JSON.stringify(items), null, 4);
+        fs.writeFileSync('./storage/data.json', JSON.stringify(items), null);
         return 200
     }
     catch (e) {
-        console.log(e.message)
-        return e.message
+        console.log(e)
+        return 500
     }
 }

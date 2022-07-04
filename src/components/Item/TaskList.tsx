@@ -4,8 +4,21 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { useEffect } from 'react';
 
-export default function TaskList({ checkbox, tasks, handleDelete, handleToggle, checked }) {
-    
+
+import { Task } from '../../models/interface';
+import { Paper } from '@mui/material';
+
+
+export interface TaskListType {
+    tasks: Task[],
+    handleDelete: (id: number) => void,
+    handleToggle?: (task: Task) => void,
+    checked?: number[]
+}
+
+
+export default function TaskList({tasks, handleDelete, handleToggle, checked }: TaskListType) {
+
     return (
         <Box>
             <Typography component="h1" variant="caption">
@@ -14,21 +27,18 @@ export default function TaskList({ checkbox, tasks, handleDelete, handleToggle, 
 
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {
-                    tasks.map((value, index) => {
-                        const labelId = `checkbox-list-label-${value}`;
+                    tasks.map((task, index) => {
                         return (
                             <SingleTask
                                 handleToggle={handleToggle}
-                                checked={checked}
+                                checked={checked || [0]}
                                 handleDelete={handleDelete}
-                                id={index}
-                                checkbox={checkbox}
-                                item={value} 
+                                task={task}
                                 key={index} />
                         );
                     })
                 }
-                {!tasks.length && <SingleTask deleteBtn={true} item={"No task added yet..."} />}
+                { !tasks.length && <Box><Paper>No task added yet...</Paper></Box> }
             </List>
         </Box>
     );

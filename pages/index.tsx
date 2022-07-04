@@ -2,9 +2,17 @@ import Box from '@mui/material/Box';
 import HomeView from '../src/components/Home/HomeView';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import { Item } from '../src/models/interface';
 
 
-export default function App({ Items }) {
+export interface HomeType {
+  Items: {
+    items: Item[],
+    total: number
+  }
+}
+
+export default function Home({Items} : HomeType) {
 
   return (
     <Box>
