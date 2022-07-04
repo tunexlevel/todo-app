@@ -6,8 +6,6 @@ import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 import SingleItem from './SingleItem';
 import { Alert, Grid, Typography } from '@mui/material';
-import SingleTask from './SingleTask';
-
 import { Item } from '../../models/interface';
 
 
@@ -24,7 +22,6 @@ export interface ItemListType {
 
 
 export default function ItemList({ items, searching, handleDelete, total, checked, handleToggle: handleToggle }: ItemListType) {
-
 
   return (
     <Box>

@@ -12,12 +12,16 @@ import axios from 'axios';
 import { Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { Task } from '../../models/interface';
+import AlertMessage from '../AlertMessage/AlertMessage';
+import { useAppContext } from '../../context/AppContext';
 
 
 const NewItem = () => {
     const router = useRouter()
 
-    const [value, setValue] = useState<string|null>(null);
+    const { setMessageAlert } = useAppContext()
+
+    const [value, setValue] = useState<string | null>(null);
     const [tasks, setTasks] = useState<Task[]>([]);
     const [task, setTask] = useState("");
     const [title, setTitle] = useState("");
@@ -26,16 +30,23 @@ const NewItem = () => {
     const API = process.env.NEXT_PUBLIC_API;
 
 
-    const handleAllow = () =>{
-        if(title && tasks.length > 0){
+    const handleAllow = () => {
+        if (title && tasks.length > 0) {
             setAllow(true)
         }
-        else{
+        else {
             setAllow(false)
         }
     }
 
-    useEffect(()=>{
+    
+
+    useEffect(() => {
+        setMessageAlert({ status: false, message: "" });
+    },[setMessageAlert])
+    
+
+    useEffect(() => {
         handleAllow()
     })
 
@@ -47,15 +58,18 @@ const NewItem = () => {
             tasks: tasks
         }
 
-        try{
-            const result = await axios.post(API+`/item/create`, newData)
-            alert(result.data.message);
+        try {
+            const result = await axios.post(API + `/item/create`, newData)
+            setMessageAlert({ status: true, message: result.data.message });
+            setTasks([])
+            setValue(null)
+            setTask("")
             router.push("/")
         }
-        catch(e){
+        catch (e) {
             //alert(e.message || "Internal system error");
         }
-        
+
     }
 
     const handleTitle = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -73,10 +87,10 @@ const NewItem = () => {
 
     const handleTasks = () => {
         if (task) {
-            const nTask = {status:0, id:0, title:""};
+            const nTask = { status: 0, id: 0, title: "" };
             nTask.id = tasks.length ? Math.max(...tasks.map(x => x.id)) + 1 : 1;
             nTask.title = task;
-            
+
             tasks.push(nTask)
             setTasks(tasks)
             setTask("");
@@ -92,11 +106,12 @@ const NewItem = () => {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Box component="form" >
                 <BreadCrumb page="NEW ITEM" />
+                <AlertMessage />
                 <Box>
                     <Box sx={{ display: "flex", paddingY: 5, gap: 5 }}>
-                         
-                        <TextField name="title" value={title}  onChange={handleTitle}  id="outlined-basic" sx={{ width: "70%" }} label="Title" variant="outlined" />
-                        <DateTimePicker 
+
+                        <TextField name="title" value={title} onChange={handleTitle} id="outlined-basic" sx={{ width: "70%" }} label="Title" variant="outlined" />
+                        <DateTimePicker
                             // sx={{ width: "30%" }}
                             label="Due Date"
                             value={value}
@@ -105,11 +120,11 @@ const NewItem = () => {
                         />
                     </Box>
                     <Box sx={{ display: "flex", paddingBottom: 5, gap: 5 }}>
-                        <TextField value={task}  name="task" onChange={handleTask} id="outlined-basic" sx={{ width: "80%" }} label="Task" variant="outlined" />
+                        <TextField value={task} name="task" onChange={handleTask} id="outlined-basic" sx={{ width: "80%" }} label="Task" variant="outlined" />
                         <Button variant="outlined" onClick={handleTasks} sx={{ width: "20%" }} >ADD</Button>
                     </Box>
                 </Box>
-                <TaskList  tasks={tasks} handleDelete={handleDelete}  />
+                <TaskList tasks={tasks} handleDelete={handleDelete} />
                 <Box sx={{ paddingY: 10 }}>
                     <Button onClick={handleSaveItem} variant="outlined" disabled={!allow} >
                         SAVE

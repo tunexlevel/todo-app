@@ -16,21 +16,30 @@ import BreadCrumb from '../Layout/BreadCrumb';
 import Switch from '@mui/material/Switch';
 import axios from 'axios';
 import { Item, Task } from '../../models/interface';
+import { useAppContext } from '../../context/AppContext';
+import AlertMessage from '../AlertMessage/AlertMessage';
 
 
 
 const ViewItem = ({ item }: { item: Item }) => {
+
+    const {messageAlert, setMessageAlert} = useAppContext();
+
     const [value, setValue] = useState(item.due_date);
     const [title, setTitle] = useState(item.title || "");
     const [moreTask, setMoreTask] = useState(false);
     const [tasks, setTasks] = useState(item.tasks || []);
     const [task, setTask] = useState("");
     const [status, setStatus] = useState(!item.status ? false : true);
-    const [messageAlert, setMessageAlert] = useState({ status: false, message: null });
     const [statusMessage, setStatusMessage] = useState(!item.status ? "Unfinished" : "Done");
     const [open, setOpen] = useState(true);
 
 
+    useEffect(() => {
+        setMessageAlert({ status: false, message: "" });
+    },[setMessageAlert])
+
+    
     const checkedTasks = (tasks: Task[]): number[] => {
         if (tasks.length > 0) {
             //check for the task completed
@@ -128,25 +137,7 @@ const ViewItem = ({ item }: { item: Item }) => {
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <BreadCrumb page={"VIEW ITEM"} />
-
-            {messageAlert.status &&
-                <Collapse in={open}>
-                    <Alert action={
-                        <IconButton
-                            aria-label="close"
-                            color="inherit"
-                            size="small"
-                            onClick={() => {
-                                setOpen(false);
-                            }}
-                        >
-                            <CloseIcon fontSize="inherit" />
-                        </IconButton>
-                    }
-                        sx={{ mb: 2 }} severity="info">{messageAlert.message}</Alert>
-                </Collapse>
-            }
-
+            <AlertMessage />
             <Box sx={{ paddingY: 5 }}>
                 <Box sx={{ display: "flex", paddingBottom: 2, gap: 5 }}>
                     <TextField onChange={handleTitle} value={title} id="outlined-basic" sx={{ width: "70%" }} label="Title" variant="outlined" />
@@ -183,7 +174,7 @@ const ViewItem = ({ item }: { item: Item }) => {
                 <Button variant="outlined" color="success" onClick={() => { setMoreTask(!moreTask) }}>{moreTask ? "HIDE MORE TASK" : "ADD MORE TASK"}</Button>
                 <Button variant="outlined" sx={{ marginLeft: 2 }} onClick={handleSaveItem} >SAVE</Button>
                 <Link href="/">
-                    <Button variant="outlined" sx={{ marginLeft: 2 }} color="error">CANCLE</Button>
+                    <Button variant="outlined" sx={{ marginLeft: 2 }} onClick ={()=>setMessageAlert({ status: false, message: "" })} color="error">CANCLE</Button>
                 </Link>
 
             </Box>
