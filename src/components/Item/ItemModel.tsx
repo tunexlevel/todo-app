@@ -1,8 +1,10 @@
 import fs from "fs";
 
 // data in JSON file for todo list
-import items from "../../../storage/data.json";
+import itemsData from "../../../storage/data.json";
 import { Item, Task } from "../../models/interface";
+
+let items = itemsData;
 
 export const ItemModel = {
     getAll: () => items,
@@ -91,8 +93,8 @@ function updateStatus(param: Item) {
 // prefixed with underscore '_' because 'delete' is a reserved word in javascript
 function _delete(id: number) {
     // filter out deleted item and save
-    items.filter(x => x.id.toString() !== id.toString());
-
+    items = items.filter(x => x.id !== id);
+    
     saveData();
 }
 

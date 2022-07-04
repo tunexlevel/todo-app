@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { Container } from '@mui/material';
 import Box from '@mui/material/Box';
 import NavBar from '../NavBar/NavBar';
@@ -21,20 +21,28 @@ export interface HomeViewType {
 
 const HomeView = ({ Items }: HomeViewType) => {
 
-  const [defaultItem, setDefaultItem] = useState(Items.items || []);
-  const [items, setItems] = useState(Items.items || []);
-  const [total, setTotal] = useState(Items.total || 0);
-  const [searching, setSearching] = useState(false);
+  const [defaultItem, setDefaultItem] = useState<Item[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [searching, setSearching] = useState<boolean>(false);
+  const [checked, setChecked] = useState<number[]>([0]); //list of the current item ids
 
-  const checkedItems = () => {
-    if (items.length > 0) {
-      const nItem = items.filter(x => x.status === 1)
-      return [...nItem.map(x => x.id)]
+  useEffect(()=>{
+    setItems(Items.items)
+    setTotal(Items.total)
+    setDefaultItem(Items.items)
+  }, [Items])
+
+  useEffect(()=>{
+    const checkedItems = () => {
+      if (items.length > 0) {
+        const nItem = items.filter(x => x.status === 1)
+        return [...nItem.map(x => x.id)]
+      }
+      return [0]
     }
-    return [0]
-  }
-
-  const [checked, setChecked] = useState(checkedItems()); //list of the current item ids
+    setChecked(checkedItems())
+  }, [items])
 
 
   const handleToggle = async (id: number) => {
