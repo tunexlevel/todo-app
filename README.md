@@ -10,20 +10,17 @@
 
 
 ## Directory
-The src folder contains the following directories:
-1. next
+The  folder contains the following directories:
+1. pages: This pages contains api and pages to display all components.
 
-2. components
+2. public: This is where you add all external images or icons
 
-3. pages
+3. src: The source directory containes the componets, context and models
 
-4. public
+4. storage: The file storage for the todo list is located here
 
-5. storage
-
-6. styles
+5. styles: This contains the global and every other customized styles.
 
 
 
-## Deploy on Vercel
 
