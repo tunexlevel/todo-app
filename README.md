@@ -2,9 +2,9 @@
 ## Getting Started
 1. Install all the dependencies for the app - run npm install
 
-2. rename the .env.example.local file to .env.local and update the API with the right port and url
+2. Rename the .env.local.example file to .env.local and update the NEXT_PUBLIC_API with the right port and url
 
-3. rename the data.example.json to data.json in /storage directory
+3. Rename the data.example.json to data.json in /storage directory
 
 4. Start the application by runing - npm run dev
 
