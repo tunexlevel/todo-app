@@ -3,6 +3,8 @@ import NavBar from "../NavBar/NavBar"
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { ReactNode, useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
+import moment from "moment";
+import Footer from "./Footer";
 
 const AppLayout = ({children}: { children: ReactNode }) => {
 
@@ -23,6 +25,7 @@ const AppLayout = ({children}: { children: ReactNode }) => {
             <Container sx={{ width: screenWith, backgroundColor: "white" }}>
                 {children}
             </Container>
+            <Footer/>
         </Box>
     )
 }

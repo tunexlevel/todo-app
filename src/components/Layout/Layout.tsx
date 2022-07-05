@@ -1,5 +1,5 @@
-import { ReactNode, useEffect, useState } from "react";
-import { AppWrapper, useAppContext } from "../../context/AppContext";
+import { ReactNode } from "react";
+import { AppWrapper } from "../../context/AppContext";
 import LoaderView from "../Loader/LoaderView";
 import AppLayout from "./AppLayout";
 
