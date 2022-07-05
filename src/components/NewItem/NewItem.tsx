@@ -30,28 +30,23 @@ const NewItem = () => {
     const API = process.env.NEXT_PUBLIC_API;
 
 
-    const handleAllow = () => {
+    
+
+    useEffect(() => {
+        setMessageAlert({ status: false, message: "" });
+    },[setMessageAlert])
+
+    useEffect(() => {
         if (title && tasks.length > 0) {
             setAllow(true)
         }
         else {
             setAllow(false)
         }
-    }
+    }, [title, tasks])
 
-    
-
-    useEffect(() => {
-        setMessageAlert({ status: false, message: "" });
-    },[setMessageAlert])
-    
-
-    useEffect(() => {
-        handleAllow()
-    })
 
     async function handleSaveItem() {
-
         const newData = {
             title: title,
             due_date: value,
@@ -68,14 +63,13 @@ const NewItem = () => {
             router.push("/")
         }
         catch (e) {
-            //alert(e.message || "Internal system error");
+            setMessageAlert({ status: true, message: "Something went wrong" });
         }
 
     }
 
     const handleTitle = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setTitle(event.target.value);
-        handleAllow();
     };
 
     const handleChange = (newValue: string | null) => {
@@ -91,8 +85,13 @@ const NewItem = () => {
             const nTask = { status: 0, id: 0, title: "" };
             nTask.id = tasks.length ? Math.max(...tasks.map(x => x.id)) + 1 : 1;
             nTask.title = task;
-
             tasks.push(nTask)
+            if (title && tasks.length > 0) {
+                setAllow(true)
+            }
+            else {
+                setAllow(false)
+            }
             setTasks(tasks)
             setTask("");
         }

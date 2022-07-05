@@ -5,12 +5,9 @@ import Button from "@mui/material/Button"
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import ItemList from "../Item/ItemList"
-import { Alert, Collapse, FormControlLabel, IconButton, Typography } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { FormControlLabel, Typography } from '@mui/material';
 
 import Link from 'next/link';
-import { ArrowBack } from '@mui/icons-material';
 import TaskList from '../Item/TaskList';
 import BreadCrumb from '../Layout/BreadCrumb';
 import Switch from '@mui/material/Switch';
@@ -23,22 +20,30 @@ import AlertMessage from '../AlertMessage/AlertMessage';
 
 const ViewItem = ({ item }: { item: Item }) => {
 
-    const {messageAlert, setMessageAlert, open, setOpen} = useAppContext();
+    const { setMessageAlert, setOpen } = useAppContext();
 
-    const [value, setValue] = useState(item.due_date);
-    const [title, setTitle] = useState(item.title || "");
+    const [value, setValue] = useState<null | string>(null);
+    const [title, setTitle] = useState("");
     const [moreTask, setMoreTask] = useState(false);
-    const [tasks, setTasks] = useState(item.tasks || []);
+    const [tasks, setTasks] = useState<Task[]>([]);
     const [task, setTask] = useState("");
     const [status, setStatus] = useState(!item.status ? false : true);
-    const [statusMessage, setStatusMessage] = useState(!item.status ? "Unfinished" : "Done");
+    const [statusMessage, setStatusMessage] = useState("Unfinished");
 
+    const [checked, setChecked] = useState<number[]>([0]); //list of the current item ids
 
     useEffect(() => {
         setMessageAlert({ status: false, message: "" });
-    },[setMessageAlert])
+    }, [setMessageAlert])
 
-    
+    useEffect(() => {
+        setValue(item.due_date)
+        setTitle(item.title)
+        setTasks(item.tasks)
+        setStatusMessage(!item.status ? "Unfinished" : "Done")
+    }, [item])
+
+
     const checkedTasks = (tasks: Task[]): number[] => {
         if (tasks.length > 0) {
             //check for the task completed
@@ -50,7 +55,12 @@ const ViewItem = ({ item }: { item: Item }) => {
         return [0]
     }
 
-    const [checked, setChecked] = useState(checkedTasks(tasks)); //list of the current item ids
+
+    useEffect(() => {
+        setChecked(checkedTasks(tasks))
+    }, [tasks])
+
+
 
 
     const handleStatus = async () => {
@@ -173,7 +183,7 @@ const ViewItem = ({ item }: { item: Item }) => {
                 <Button variant="outlined" color="success" onClick={() => { setMoreTask(!moreTask) }}>{moreTask ? "HIDE MORE TASK" : "ADD MORE TASK"}</Button>
                 <Button variant="outlined" sx={{ marginLeft: 2 }} onClick={handleSaveItem} >SAVE</Button>
                 <Link href="/">
-                    <Button variant="outlined" sx={{ marginLeft: 2 }} onClick ={()=>setMessageAlert({ status: false, message: "" })} color="error">CANCLE</Button>
+                    <Button variant="outlined" sx={{ marginLeft: 2 }} onClick={() => setMessageAlert({ status: false, message: "" })} color="error">CANCLE</Button>
                 </Link>
 
             </Box>
