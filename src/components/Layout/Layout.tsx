@@ -1,28 +1,19 @@
-import { Box, Container } from "@mui/material"
-import NavBar from "../NavBar/NavBar"
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { ReactNode } from "react";
-import { AppWrapper } from "../../context/AppContext";
+import { ReactNode, useEffect, useState } from "react";
+import { AppWrapper, useAppContext } from "../../context/AppContext";
+import LoaderView from "../Loader/LoaderView";
+import AppLayout from "./AppLayout";
 
 
 
 const Layout = ({ children }: { children: ReactNode }) => {
 
-    const matches = useMediaQuery('(min-width:600px)');
-
-    const size = matches ? "60%" : "100%";
-
     return (
-        <Box>
-            <NavBar />
-            <Box>
-                <AppWrapper>
-                    <Container sx={{ width: size, backgroundColor: "white" }}>
-                        {children}
-                    </Container>
-                </AppWrapper>
-            </Box>
-        </Box>
+        <AppWrapper>
+            <LoaderView />
+            <AppLayout>
+                {children}
+            </AppLayout>
+        </AppWrapper>
     )
 }
 

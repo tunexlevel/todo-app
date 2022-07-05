@@ -19,7 +19,7 @@ import { useAppContext } from '../../context/AppContext';
 const NewItem = () => {
     const router = useRouter()
 
-    const { setMessageAlert, setOpen } = useAppContext()
+    const { setMessageAlert, setOpen, setLoader } = useAppContext()
 
     const [value, setValue] = useState<string | null>(null);
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -30,7 +30,9 @@ const NewItem = () => {
     const API = process.env.NEXT_PUBLIC_API;
 
 
-    
+    useEffect(() => {
+        setLoader(false)
+    }, [setLoader])
 
     useEffect(() => {
         setMessageAlert({ status: false, message: "" });

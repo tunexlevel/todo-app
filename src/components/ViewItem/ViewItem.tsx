@@ -20,7 +20,7 @@ import AlertMessage from '../AlertMessage/AlertMessage';
 
 const ViewItem = ({ item }: { item: Item }) => {
 
-    const { setMessageAlert, setOpen } = useAppContext();
+    const { setMessageAlert, setOpen, setLoader } = useAppContext();
 
     const [value, setValue] = useState<null | string>(null);
     const [title, setTitle] = useState("");
@@ -42,6 +42,11 @@ const ViewItem = ({ item }: { item: Item }) => {
         setTasks(item.tasks)
         setStatusMessage(!item.status ? "Unfinished" : "Done")
     }, [item])
+
+    useEffect(() => {
+        setLoader(false)
+    }, [setLoader])
+
 
 
     const checkedTasks = (tasks: Task[]): number[] => {

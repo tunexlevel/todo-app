@@ -3,6 +3,7 @@ import HomeView from '../src/components/Home/HomeView';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { Item } from '../src/models/interface';
+import { useAppContext } from '../src/context/AppContext';
 
 
 export interface HomeType {
@@ -13,6 +14,8 @@ export interface HomeType {
 }
 
 export default function Home({Items} : HomeType) {
+
+  const { setLoader, loader } = useAppContext()
 
   return (
     <Box>

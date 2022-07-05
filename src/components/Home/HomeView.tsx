@@ -1,13 +1,12 @@
-import { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { Container } from '@mui/material';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import NavBar from '../NavBar/NavBar';
 import SearchBar from './SearchBar';
 import ItemList from '../Item/ItemList'
 import ViewMore from '../ViewMore/ViewMore';
-import { LocationSearching } from '@mui/icons-material';
 import axios from 'axios';
 import { Item } from '../../models/interface';
+import { useAppContext } from '../../context/AppContext';
 
 
 export interface Items {
@@ -33,6 +32,8 @@ const HomeView = ({ Items }: HomeViewType) => {
     setDefaultItem(Items.items)
   }, [Items])
 
+  const { setLoader } = useAppContext()
+
   useEffect(()=>{
     const checkedItems = () => {
       if (items.length > 0) {
@@ -43,6 +44,14 @@ const HomeView = ({ Items }: HomeViewType) => {
     }
     setChecked(checkedItems())
   }, [items])
+
+
+  useEffect(()=>{
+    if(items.length > 0){
+      setLoader(false)
+    }
+  }, [items, setLoader])
+  
 
 
   const handleToggle = async (id: number) => {
@@ -82,8 +91,6 @@ const HomeView = ({ Items }: HomeViewType) => {
       catch (e) {
         //alert(e.message || "Internal system error");
       }
-      //const newItems = Items.filter(item => item.title.toLowerCase() == keyword.toLowerCase())
-
     }
   }
 
